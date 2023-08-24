@@ -26,7 +26,6 @@ export default function SignInScreen({ setToken }) {
 	const handleSubmit = async () => {
 		if (email && password) {
 			try {
-				console.log("je passe");
 				const response = await axios.post(
 					"https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/log_in",
 					{ email, password }
@@ -35,7 +34,11 @@ export default function SignInScreen({ setToken }) {
 				setEmail("");
 				setPassword("");
 				setErrorMessage("");
-				console.log("response.data",response.data)
+				console.log("response.data", response.data.token);
+				await AsyncStorage.setItem("token", response.data.token);
+				const info = await AsyncStorage.getItem("token");
+				console.log("token >>", info);
+				navigation.navigate("Home");
 			} catch (error) {
 				setErrorMessage("Email or password are false");
 				console.log("server error", error);
@@ -78,11 +81,7 @@ export default function SignInScreen({ setToken }) {
 						<View style={styles.centerBloc}>
 							<TouchableOpacity
 								title="Sign in"
-								onPress={async () => {
-									handleSubmit;
-									const userToken = "secret-token";
-									setToken(userToken);
-								}}
+								onPress={handleSubmit}
 								style={styles.validationButton}
 							>
 								<Text style={styles.textValidationButton}>Sign In</Text>

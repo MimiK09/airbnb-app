@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SignUpScreen({ setToken }) {
 	const styles = useStyle();
@@ -31,7 +32,6 @@ export default function SignUpScreen({ setToken }) {
 	};
 
 	const handleSubmit = async () => {
-		console.log("je passe");
 		if (password && confirmPassword && text && email && username) {
 			if (password === confirmPassword) {
 				try {
@@ -48,7 +48,11 @@ export default function SignUpScreen({ setToken }) {
 					setPassword("");
 					setText("");
 					setErrorMsg("");
-					console.log("response.data",response.data)
+					console.log("response.data.token", response.data.token);
+					async () => {
+						await AsyncStorage.setItem("token", response.data.token);
+					};
+					navigation.navigate("Home");
 				} catch (error) {
 					console.log("error", error);
 				}
@@ -127,16 +131,16 @@ export default function SignUpScreen({ setToken }) {
 						<View style={styles.centerBloc}>
 							<TouchableOpacity
 								title="Sign up"
-								onPress={async () => {
-									handleSubmit;
-									const userToken = "secret-token";
-									setToken(userToken);
-								}}
+								onPress={handleSubmit}
 								style={styles.validationButton}
 							>
 								<Text style={styles.textValidationButton}>Sign Up</Text>
 							</TouchableOpacity>
-							{errorMsg ? <Text style={styles.errorMsg}>{errorMsg}</Text> : <></>}
+							{errorMsg ? (
+								<Text style={styles.errorMsg}>{errorMsg}</Text>
+							) : (
+								<></>
+							)}
 							<TouchableOpacity
 								onPress={() => {
 									navigation.navigate("SignIn");
@@ -211,7 +215,7 @@ const useStyle = () => {
 		},
 		errorMsg: {
 			color: "#f9585d",
-      marginVertical:10,
+			marginVertical: 10,
 		},
 	});
 

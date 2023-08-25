@@ -35,13 +35,10 @@ export default function SignUpScreen({ setToken }) {
 		if (password && confirmPassword && text && email && username) {
 			if (password === confirmPassword) {
 				try {
-					console.log("je passe")
-
 					const response = await axios.post(
 						"https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/sign_up",
-						{ email, username, description: text, password }
+						{ email, username, description: text, password },
 					);
-					console.log("je passe2")
 					Alert.alert("Sign up completed !");
 					setEmail("");
 					setUsername("");
@@ -50,9 +47,10 @@ export default function SignUpScreen({ setToken }) {
 					setText("");
 					setErrorMsg("");
 					console.log("response.data.token", response.data.token);
-					setToken(response.data.token)
+					await AsyncStorage.setItem("token",response.data.token);
+					setToken(response.data.token);
 				} catch (error) {
-					console.log("error", error);
+					console.log("sign up error", error.response);
 				}
 			} else {
 				setErrorMsg("Passwords are not the same");

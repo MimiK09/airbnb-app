@@ -35,11 +35,11 @@ export default function SignInScreen({ setToken }) {
 				setPassword("");
 				setErrorMessage("");
 				console.log("response.data.token", response.data.token);
-				setToken(response.data.token)
-				await AsyncStorage.setItem("token", response.data.token);
+				await AsyncStorage.setItem("token",response.data.token);
+				setToken(response.data.token);
 			} catch (error) {
 				setErrorMessage("Email or password are false");
-				console.log("server error", error);
+				console.log("sign in error", error.response);
 			}
 		} else {
 			setErrorMessage("Please fill all fields");

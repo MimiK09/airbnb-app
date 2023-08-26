@@ -10,6 +10,7 @@ import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
 import SplashScreen from "./containers/SplashScreen";
+import RoomDetailsScreen from "./containers/RoomDetailsScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -86,8 +87,7 @@ export default function App() {
 										<Stack.Navigator>
 											<Stack.Screen
 												name="Home"
-												options={{headerShown: false
-												}}
+												options={{ headerShown: false }}
 											>
 												{() => <HomeScreen />}
 											</Stack.Screen>
@@ -99,6 +99,12 @@ export default function App() {
 												}}
 											>
 												{() => <ProfileScreen />}
+											</Stack.Screen>
+											<Stack.Screen
+												name="RoomDetails"
+												options={{ headerShown: false }}
+											>
+												{(props) => <RoomDetailsScreen {...props} />}
 											</Stack.Screen>
 										</Stack.Navigator>
 									)}

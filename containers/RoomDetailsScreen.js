@@ -1,43 +1,46 @@
-import { useNavigation } from "@react-navigation/core";
-import { Feather } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
 import {
-	Button,
 	Text,
+	TextInput,
 	View,
+	TouchableOpacity,
+	Image,
 	useWindowDimensions,
-	FlatList,
 	StyleSheet,
 	ScrollView,
+	Alert,
 	SafeAreaView,
-	Image,
-	TouchableOpacity,
-	ActivityIndicator,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useState, useEffect } from "react";
+import axios from "axios"; // à installer
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"; // à installer
 import Constants from "expo-constants";
 
-export default function HomeScreen() {
-	const navigation = useNavigation();
+// j'importe navigation en prop si pas déjà importé dans le screen
+export default function RoomDetailsScreen({ navigation, route }) {
+	const { id } = route.params;
 	const styles = useStyle();
+	console.log("route", id);
 	const [data, setData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		const getRooms = async () => {
+		const getRoomDetails = async () => {
 			try {
+				console.log("je passe");
 				const response = await axios.get(
-					"https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms"
+					`https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms/${id}`
 				);
+				console.log("je passebis");
+				console.log("response.data", response.data.photos[0].url);
 				setData(response.data);
 				setIsLoading(false);
+				console.log("je passe2");
 			} catch (error) {
-				console.log("error home", error);
+				console.log("error", error.response);
 			}
 		};
 
-		getRooms();
+		getRoomDetails();
 	}, []);
 
 	ratingFunc = (number) => {
@@ -72,64 +75,42 @@ export default function HomeScreen() {
 	};
 
 	return (
-		<SafeAreaView style={styles.container}>
-			{isLoading ? (
-				<ActivityIndicator></ActivityIndicator>
-			) : (
-				<View style={styles.mainBloc}>
-					<View>
+		<SafeAreaView contentContainerStyle={[styles.container, styles.container]}>
+			<View>
+				<Image source={require("../assets/ABNB.png")} style={styles.imgLogo} />
+			</View>
+			<ScrollView>
+				<View>
+					<View style={styles.blocImgRoom}>
+						{/* <Image
+							source={{ uri: data.photos[0].url }}
+							style={styles.imgRoom}
+						/> */}
+						<Text style={styles.blocPriceImgRoom}>{data.price} €</Text>
+					</View>
+					<View style={styles.descBloc}>
+						<View>
+							<Text style={styles.titleRoom} numberOfLines={1}>
+								{data.title}
+							</Text>
+							<View style={styles.ratingBloc}>
+								<View style={styles.ratingBloc}>
+									{ratingFunc(data.ratingValue)}
+								</View>
+								<Text>{data.reviews} reviews</Text>
+							</View>
+						</View>
+
 						<Image
-							source={require("../assets/ABNB.png")}
-							style={styles.imgLogo}
+							source={{ uri: data.user.account.photo[0].url }}
+							style={styles.userImg}
 						/>
 					</View>
-					<FlatList
-						data={data}
-						keyExtractor={(item) => item._id}
-						renderItem={(element) => {
-							return (
-								<TouchableOpacity
-									style={styles.room}
-									onPress={() => {
-										console.log("je passe");
-										navigation.navigate("RoomDetails", {
-											id: element.item._id,
-										});
-									}}
-								>
-									<View style={styles.blocImgRoom}>
-										<Image
-											source={{ url: element.item.photos[0].url }}
-											style={styles.imgRoom}
-										/>
-										<Text style={styles.blocPriceImgRoom}>
-											{element.item.price} €
-										</Text>
-									</View>
-									<View style={styles.descBloc}>
-										<View>
-											<Text style={styles.titleRoom} numberOfLines={1}>
-												{element.item.title}
-											</Text>
-											<View style={styles.ratingBloc}>
-												<View style={styles.ratingBloc}>
-													{ratingFunc(element.item.ratingValue)}
-												</View>
-												<Text>{element.item.reviews} reviews</Text>
-											</View>
-										</View>
-
-										<Image
-											source={{ url: element.item.user.account.photo.url }}
-											style={styles.userImg}
-										/>
-									</View>
-								</TouchableOpacity>
-							);
-						}}
-					></FlatList>
+					<View>
+						<Text numberOfLines={3}>{data.description}</Text>
+					</View>
 				</View>
-			)}
+			</ScrollView>
 		</SafeAreaView>
 	);
 }
@@ -152,10 +133,10 @@ const useStyle = () => {
 			resizeMode: "contain",
 			marginVertical: 10,
 		},
-		room: {
-			marginVertical: 10,
-			borderBottomWidth: 0.5,
-			borderBottomColor: "#bbbbbb",
+
+		titleSign: {
+			fontSize: 24,
+			marginVertical: 5,
 		},
 		blocImgRoom: {
 			position: "relative",

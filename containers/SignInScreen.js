@@ -35,7 +35,7 @@ export default function SignInScreen({ setToken }) {
 				setPassword("");
 				setErrorMessage("");
 				console.log("response.data.token", response.data.token);
-				await AsyncStorage.setItem("token",response.data.token);
+				await AsyncStorage.setItem("token", response.data.token);
 				setToken(response.data.token);
 			} catch (error) {
 				setErrorMessage("Email or password are false");

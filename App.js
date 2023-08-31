@@ -11,6 +11,7 @@ import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
 import SplashScreen from "./containers/SplashScreen";
 import RoomDetailsScreen from "./containers/RoomDetailsScreen";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -18,6 +19,7 @@ const Stack = createNativeStackNavigator();
 export default function App() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [userToken, setUserToken] = useState(null);
+	const [userId, setUserId] = useState(null);
 
 	const setToken = async (token) => {
 		if (token) {
@@ -38,6 +40,9 @@ export default function App() {
 			// This will switch to the App screen or Auth screen and this loading
 			// screen will be unmounted and thrown away.
 			setUserToken(userToken);
+
+			const id = await AsyncStorage.getItem("id");
+			setUserId(id); // Met à jour le state avec l'ID récupéré
 
 			setIsLoading(false);
 		};
@@ -109,6 +114,24 @@ export default function App() {
 										</Stack.Navigator>
 									)}
 								</Tab.Screen>
+								<Tab.Screen
+									name="TabProfile"
+									options={{
+										tabBarLabel: "Profile",
+										tabBarIcon: ({ color, size }) => (
+											<MaterialIcons
+												name="account-box"
+												size={size}
+												color={color}
+											/>
+										),
+									}}
+								>
+									{() => (
+										<ProfileScreen userId={userId} userToken={userToken} />
+									)}
+								</Tab.Screen>
+
 								<Tab.Screen
 									name="TabSettings"
 									options={{

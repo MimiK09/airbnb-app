@@ -11,6 +11,8 @@ import {
 	SafeAreaView,
 } from "react-native";
 import { useState, useEffect } from "react";
+import { Feather } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import axios from "axios"; // à installer
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view"; // à installer
 import Constants from "expo-constants";
@@ -30,8 +32,8 @@ export default function RoomDetailsScreen({ navigation, route }) {
 				const response = await axios.get(
 					`https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms/${id}`
 				);
-				console.log("je passebis");
-				console.log("response.data", response.data.photos[0].url);
+
+				console.log("response.data", response.data.photo);
 				setData(response.data);
 				setIsLoading(false);
 				console.log("je passe2");
@@ -82,10 +84,10 @@ export default function RoomDetailsScreen({ navigation, route }) {
 			<ScrollView>
 				<View>
 					<View style={styles.blocImgRoom}>
-						{/* <Image
+						  <Image
 							source={{ uri: data.photos[0].url }}
 							style={styles.imgRoom}
-						/> */}
+						/>  
 						<Text style={styles.blocPriceImgRoom}>{data.price} €</Text>
 					</View>
 					<View style={styles.descBloc}>
@@ -100,11 +102,10 @@ export default function RoomDetailsScreen({ navigation, route }) {
 								<Text>{data.reviews} reviews</Text>
 							</View>
 						</View>
-
-						<Image
-							source={{ uri: data.user.account.photo[0].url }}
+						 <Image
+							source={{ uri: data.user?.account?.photo?.url }}
 							style={styles.userImg}
-						/>
+						/>  
 					</View>
 					<View>
 						<Text numberOfLines={3}>{data.description}</Text>

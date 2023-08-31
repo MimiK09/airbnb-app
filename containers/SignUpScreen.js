@@ -40,6 +40,7 @@ export default function SignUpScreen({ setToken }) {
 						{ email, username, description: text, password },
 					);
 					Alert.alert("Sign up completed !");
+					console.log("response.data", response.data)
 					setEmail("");
 					setUsername("");
 					setConfirmPassword("");
@@ -48,7 +49,8 @@ export default function SignUpScreen({ setToken }) {
 					setErrorMsg("");
 					console.log("response.data.token", response.data.token);
 					await AsyncStorage.setItem("token",response.data.token);
-					setToken(response.data.token);
+					await AsyncStorage.setItem("id", response.data.id);
+					setToken(response.data.token)
 				} catch (error) {
 					console.log("sign up error", error.response);
 				}

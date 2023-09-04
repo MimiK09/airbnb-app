@@ -11,7 +11,9 @@ import SignUpScreen from "./containers/SignUpScreen";
 import SettingsScreen from "./containers/SettingsScreen";
 import SplashScreen from "./containers/SplashScreen";
 import RoomDetailsScreen from "./containers/RoomDetailsScreen";
+import AroundScreen from "./containers/AroundScreen";
 import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -128,11 +130,53 @@ export default function App() {
 									}}
 								>
 									{() => (
-										<ProfileScreen userId={userId} userToken={userToken} />
+										<Stack.Navigator>
+											<Stack.Screen
+												name="MyAccount"
+												options={{
+													title: "My Account",
+												}}
+											>
+												{() => (
+													<ProfileScreen
+														userId={userId}
+														userToken={userToken}
+														setUserToken={setUserToken}
+													/>
+												)}
+											</Stack.Screen>
+										</Stack.Navigator>
 									)}
 								</Tab.Screen>
 
 								<Tab.Screen
+									name="TabAroundMe"
+									options={{
+										tabBarLabel: "Around Me",
+										tabBarIcon: ({ color, size }) => (
+											<FontAwesome
+												name="map-marker"
+												size={size}
+												color={color}
+											/>
+										),
+									}}
+								>
+									{() => (
+										<Stack.Navigator>
+											<Stack.Screen
+												name="Around Me"
+												options={{
+													title: "Around Me",
+												}}
+											>
+												{() => <AroundScreen />}
+											</Stack.Screen>
+										</Stack.Navigator>
+									)}
+								</Tab.Screen>
+
+								{/* <Tab.Screen
 									name="TabSettings"
 									options={{
 										tabBarLabel: "Settings",
@@ -157,7 +201,7 @@ export default function App() {
 											</Stack.Screen>
 										</Stack.Navigator>
 									)}
-								</Tab.Screen>
+								</Tab.Screen> */}
 							</Tab.Navigator>
 						)}
 					</Stack.Screen>

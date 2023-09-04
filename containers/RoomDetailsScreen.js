@@ -21,7 +21,7 @@ import Constants from "expo-constants";
 export default function RoomDetailsScreen({ navigation, route }) {
 	const { id } = route.params;
 	const styles = useStyle();
-	console.log("route", id);
+	// console.log("route", id);
 	const [data, setData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -33,7 +33,7 @@ export default function RoomDetailsScreen({ navigation, route }) {
 					`https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms/${id}`
 				);
 
-				console.log("response.data", response.data.photo);
+				console.log("response.data", response.data);
 				setData(response.data);
 				setIsLoading(false);
 				console.log("je passe2");
@@ -84,10 +84,12 @@ export default function RoomDetailsScreen({ navigation, route }) {
 			<ScrollView>
 				<View>
 					<View style={styles.blocImgRoom}>
-						  <Image
-							source={{ uri: data.photos[0].url }}
-							style={styles.imgRoom}
-						/>  
+						{data.photos && data.photos.length > 0 && (
+							<Image
+								source={{ uri: data.photos[0].url }}
+								style={styles.imgRoom}
+							/>
+						)}
 						<Text style={styles.blocPriceImgRoom}>{data.price} €</Text>
 					</View>
 					<View style={styles.descBloc}>
@@ -102,10 +104,10 @@ export default function RoomDetailsScreen({ navigation, route }) {
 								<Text>{data.reviews} reviews</Text>
 							</View>
 						</View>
-						 <Image
+						<Image
 							source={{ uri: data.user?.account?.photo?.url }}
 							style={styles.userImg}
-						/>  
+						/>
 					</View>
 					<View>
 						<Text numberOfLines={3}>{data.description}</Text>
@@ -145,6 +147,7 @@ const useStyle = () => {
 		imgRoom: {
 			aspectRatio: 4 / 2,
 			width: "100%",
+			height: "undefined",
 		},
 		blocPriceImgRoom: {
 			position: "absolute",

@@ -17,17 +17,21 @@ import { useNavigation } from "@react-navigation/core";
 import axios from "axios";
 import accountPict from "../assets/accountPict.jpeg";
 
-export default function ProfileScreen({ userId, userToken }) {
+export default function ProfileScreen({ userId, userToken, setUserToken }) {
 	const { params } = useRoute();
 	const styles = useStyle();
 	const navigation = useNavigation();
-	console.log("userId>>", userId);
-	console.log("userToken>>", userToken);
+	// console.log("userId>>", userId);
+	// console.log("userToken>>", userToken);
 
 	const [email, setEmail] = useState("");
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
 	const [pict, setPict] = useState("");
+	const [newemail, setNewEmail] = useState("");
+	const [newname, setNewName] = useState("");
+	const [newdescription, setNewDescription] = useState("");
+	const [newpict, setNewPict] = useState("");
 
 	useEffect(() => {
 		const getUserInfo = async () => {
@@ -40,10 +44,15 @@ export default function ProfileScreen({ userId, userToken }) {
 						},
 					}
 				);
+				console.log("useeffect data", response.data);
 				setDescription(response.data.description);
 				setName(response.data.username);
 				setEmail(response.data.email);
 				setPict(response.data.photo);
+				setNewDescription(response.data.description);
+				setNewName(response.data.username);
+				setNewEmail(response.data.email);
+				setNewPict(response.data.photo);
 			} catch (error) {
 				console.log("error", error.response);
 			}
@@ -64,7 +73,7 @@ export default function ProfileScreen({ userId, userToken }) {
 			if (result.canceled === true) {
 				alert("No pict have been selected");
 			} else {
-				setPict(result.assets[0].uri);
+				setNewPict(result.assets[0].uri);
 			}
 		} else {
 			alert(
@@ -73,32 +82,76 @@ export default function ProfileScreen({ userId, userToken }) {
 		}
 	};
 
+	const handleUpload = async () => {
+		// si name OU description OU email change
+		if (
+			name !== newname ||
+			description !== newdescription ||
+			email !== newemail
+		) {
+			try {
+				const response = await axios.put(
+					"https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/update",
+					{ email: newemail, description: newdescription, username: newname },
+					{
+						headers: {
+							Authorization: `Bearer ${userToken}`,
+						},
+					}
+				);
+				console.log(response.data);
+			} catch (error) {
+				console.log(error.data);
+			}
+		}
+
+		// si image change
+		if (pict !== newpict) {
+			console.log("pict", pict);
+			console.log("newpict", newpict);
+			try {
+				const response = await axios.put(
+					"https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/upload_picture",
+					{ photo: newpict },
+					{
+						headers: {
+							Authorization: `Bearer ${userToken}`,
+						},
+					}
+				);
+				console.log("response.data", response.data);
+			} catch (error) {
+				console.log("error.data", error);
+			}
+		}
+	};
+
 	return (
 		<SafeAreaView style={styles.mainBloc}>
 			<Text>ProfileScreen</Text>
 			<TextInput
 				onChangeText={(event) => {
-					setName(event);
+					setNewName(event);
 				}}
-				value={name}
+				value={newname}
 			></TextInput>
 
 			<TextInput
 				onChangeText={(event) => {
-					setEmail(event);
+					setNewEmail(event);
 				}}
-				value={email}
+				value={newemail}
 			></TextInput>
 
 			<TextInput
 				onChangeText={(event) => {
-					setDescription(event);
+					setNewDescription(event);
 				}}
-				value={description}
+				value={newdescription}
 			></TextInput>
 
 			<Image
-				source={pict ? { uri: pict } : accountPict} // Remplace "chemin/vers/icon.png" par le chemin de ton icône
+				source={newpict ? { uri: newpict } : accountPict} // Remplace "chemin/vers/icon.png" par le chemin de ton icône
 				style={styles.profileImage}
 			/>
 
@@ -108,6 +161,17 @@ export default function ProfileScreen({ userId, userToken }) {
 
 			<TouchableOpacity>
 				<Text>Appareil photo</Text>
+			</TouchableOpacity>
+			<TouchableOpacity
+				onPress={async () => {
+					setUserToken(null);
+					await AsyncStorage.removeItem("token");
+				}}
+			>
+				<Text>Log Out</Text>
+			</TouchableOpacity>
+			<TouchableOpacity onPress={handleUpload}>
+				<Text>Upload new info</Text>
 			</TouchableOpacity>
 		</SafeAreaView>
 	);

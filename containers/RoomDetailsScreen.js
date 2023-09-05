@@ -28,15 +28,12 @@ export default function RoomDetailsScreen({ navigation, route }) {
 	useEffect(() => {
 		const getRoomDetails = async () => {
 			try {
-				console.log("je passe");
 				const response = await axios.get(
 					`https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms/${id}`
 				);
 
-				console.log("response.data", response.data);
 				setData(response.data);
 				setIsLoading(false);
-				console.log("je passe2");
 			} catch (error) {
 				console.log("error", error.response);
 			}
@@ -78,9 +75,6 @@ export default function RoomDetailsScreen({ navigation, route }) {
 
 	return (
 		<SafeAreaView contentContainerStyle={[styles.container, styles.container]}>
-			<View>
-				<Image source={require("../assets/ABNB.png")} style={styles.imgLogo} />
-			</View>
 			<ScrollView>
 				<View>
 					<View style={styles.blocImgRoom}>

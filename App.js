@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "./containers/HomeScreen";
+import HeaderLogo from "./components/HeaderLogo";
 import ProfileScreen from "./containers/ProfileScreen";
 import SignInScreen from "./containers/SignInScreen";
 import SignUpScreen from "./containers/SignUpScreen";
@@ -94,22 +95,17 @@ export default function App() {
 										<Stack.Navigator>
 											<Stack.Screen
 												name="Home"
-												options={{ headerShown: false }}
+												options={{ headerTitle: () => <HeaderLogo /> }}
 											>
 												{() => <HomeScreen />}
 											</Stack.Screen>
 
 											<Stack.Screen
-												name="Profile"
-												options={{
-													title: "User Profile",
-												}}
-											>
-												{() => <ProfileScreen />}
-											</Stack.Screen>
-											<Stack.Screen
 												name="RoomDetails"
-												options={{ headerShown: false }}
+												options={{
+													headerTitle: () => <HeaderLogo />,
+													headerLeft: () => null,
+												}}
 											>
 												{(props) => <RoomDetailsScreen {...props} />}
 											</Stack.Screen>
@@ -134,7 +130,7 @@ export default function App() {
 											<Stack.Screen
 												name="MyAccount"
 												options={{
-													title: "My Account",
+													headerTitle: () => <HeaderLogo />,
 												}}
 											>
 												{() => (
@@ -167,41 +163,23 @@ export default function App() {
 											<Stack.Screen
 												name="Around Me"
 												options={{
-													title: "Around Me",
+													headerTitle: () => <HeaderLogo />,
 												}}
 											>
 												{() => <AroundScreen />}
 											</Stack.Screen>
-										</Stack.Navigator>
-									)}
-								</Tab.Screen>
-
-								{/* <Tab.Screen
-									name="TabSettings"
-									options={{
-										tabBarLabel: "Settings",
-										tabBarIcon: ({ color, size }) => (
-											<Ionicons
-												name={"ios-options"}
-												size={size}
-												color={color}
-											/>
-										),
-									}}
-								>
-									{() => (
-										<Stack.Navigator>
 											<Stack.Screen
-												name="Settings"
+												name="RoomDetailsMap"
 												options={{
-													title: "Settings",
+													headerTitle: () => <HeaderLogo />,
+													headerLeft: () => null,
 												}}
 											>
-												{() => <SettingsScreen setToken={setToken} />}
+												{(props) => <RoomDetailsScreen {...props} />}
 											</Stack.Screen>
 										</Stack.Navigator>
 									)}
-								</Tab.Screen> */}
+								</Tab.Screen>
 							</Tab.Navigator>
 						)}
 					</Stack.Screen>

@@ -44,7 +44,7 @@ export default function ProfileScreen({ userId, userToken, setUserToken }) {
 						},
 					}
 				);
-				console.log("useeffect data", response.data);
+
 				setDescription(response.data.description);
 				setName(response.data.username);
 				setEmail(response.data.email);
@@ -68,7 +68,6 @@ export default function ProfileScreen({ userId, userToken, setUserToken }) {
 				allowsEditing: true,
 				aspect: [1, 1],
 			});
-			console.log("result image", result);
 
 			if (result.canceled === true) {
 				alert("No pict have been selected");
@@ -99,7 +98,6 @@ export default function ProfileScreen({ userId, userToken, setUserToken }) {
 						},
 					}
 				);
-				console.log(response.data);
 			} catch (error) {
 				console.log(error.data);
 			}
@@ -107,8 +105,6 @@ export default function ProfileScreen({ userId, userToken, setUserToken }) {
 
 		// si image change
 		if (pict !== newpict) {
-			console.log("pict", pict);
-			console.log("newpict", newpict);
 			try {
 				const response = await axios.put(
 					"https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/upload_picture",
@@ -119,7 +115,6 @@ export default function ProfileScreen({ userId, userToken, setUserToken }) {
 						},
 					}
 				);
-				console.log("response.data", response.data);
 			} catch (error) {
 				console.log("error.data", error);
 			}

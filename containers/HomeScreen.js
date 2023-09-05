@@ -77,12 +77,6 @@ export default function HomeScreen() {
 				<ActivityIndicator></ActivityIndicator>
 			) : (
 				<View style={styles.mainBloc}>
-					<View>
-						<Image
-							source={require("../assets/ABNB.png")}
-							style={styles.imgLogo}
-						/>
-					</View>
 					<FlatList
 						data={data}
 						keyExtractor={(item) => item._id}

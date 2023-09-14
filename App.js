@@ -104,7 +104,8 @@ export default function App() {
 												name="RoomDetails"
 												options={{
 													headerTitle: () => <HeaderLogo />,
-													headerLeft: () => null,
+
+													headerBackVisible: false,
 												}}
 											>
 												{(props) => <RoomDetailsScreen {...props} />}
@@ -172,7 +173,7 @@ export default function App() {
 												name="RoomDetailsMap"
 												options={{
 													headerTitle: () => <HeaderLogo />,
-													headerLeft: () => null,
+													headerBackVisible: false,
 												}}
 											>
 												{(props) => <RoomDetailsScreen {...props} />}

@@ -10,6 +10,7 @@ import {
 	StyleSheet,
 	ScrollView,
 	Alert,
+	ActivityIndicator,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useState, useEffect } from "react";
@@ -32,6 +33,7 @@ export default function ProfileScreen({ userId, userToken, setUserToken }) {
 	const [newname, setNewName] = useState("");
 	const [newdescription, setNewDescription] = useState("");
 	const [newpict, setNewPict] = useState("");
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		const getUserInfo = async () => {
@@ -53,6 +55,7 @@ export default function ProfileScreen({ userId, userToken, setUserToken }) {
 				setNewName(response.data.username);
 				setNewEmail(response.data.email);
 				setNewPict(response.data.photo);
+				setIsLoading(false);
 			} catch (error) {
 				console.log("error", error.response);
 			}
@@ -106,9 +109,16 @@ export default function ProfileScreen({ userId, userToken, setUserToken }) {
 		// si image change
 		if (pict !== newpict) {
 			try {
+				const formData = new FormData();
+				formData.append("photo", {
+					uri: newpict, // Le chemin de la photo à envoyer
+					name: "user_photo.jpg", // Nom de fichier pour le serveur
+					type: "image/jpeg", // Type de fichier (image/jpeg, image/png, etc.)
+				});
+
 				const response = await axios.put(
 					"https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/user/upload_picture",
-					{ photo: newpict },
+					formData,
 					{
 						headers: {
 							Authorization: `Bearer ${userToken}`,
@@ -123,51 +133,57 @@ export default function ProfileScreen({ userId, userToken, setUserToken }) {
 
 	return (
 		<SafeAreaView style={styles.mainBloc}>
-			<Text>ProfileScreen</Text>
-			<TextInput
-				onChangeText={(event) => {
-					setNewName(event);
-				}}
-				value={newname}
-			></TextInput>
+			{isLoading ? (
+				<View>
+					<ActivityIndicator />
+				</View>
+			) : (
+				<View>
+					<TextInput
+						onChangeText={(event) => {
+							setNewName(event);
+						}}
+						value={newname}
+					></TextInput>
+					<TextInput
+						onChangeText={(event) => {
+							setNewEmail(event);
+						}}
+						value={newemail}
+					></TextInput>
 
-			<TextInput
-				onChangeText={(event) => {
-					setNewEmail(event);
-				}}
-				value={newemail}
-			></TextInput>
+					<TextInput
+						onChangeText={(event) => {
+							setNewDescription(event);
+						}}
+						value={newdescription}
+					></TextInput>
 
-			<TextInput
-				onChangeText={(event) => {
-					setNewDescription(event);
-				}}
-				value={newdescription}
-			></TextInput>
+					<Image
+						source={newpict ? { uri: newpict } : accountPict} // Remplace "chemin/vers/icon.png" par le chemin de ton icône
+						style={styles.profileImage}
+					/>
 
-			<Image
-				source={newpict ? { uri: newpict } : accountPict} // Remplace "chemin/vers/icon.png" par le chemin de ton icône
-				style={styles.profileImage}
-			/>
+					<TouchableOpacity onPress={getPermissionAndGetPicture}>
+						<Text>Galerie</Text>
+					</TouchableOpacity>
 
-			<TouchableOpacity onPress={getPermissionAndGetPicture}>
-				<Text>Galerie</Text>
-			</TouchableOpacity>
-
-			<TouchableOpacity>
-				<Text>Appareil photo</Text>
-			</TouchableOpacity>
-			<TouchableOpacity
-				onPress={async () => {
-					setUserToken(null);
-					await AsyncStorage.removeItem("token");
-				}}
-			>
-				<Text>Log Out</Text>
-			</TouchableOpacity>
-			<TouchableOpacity onPress={handleUpload}>
-				<Text>Upload new info</Text>
-			</TouchableOpacity>
+					<TouchableOpacity>
+						<Text>Appareil photo</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						onPress={async () => {
+							setUserToken(null);
+							await AsyncStorage.removeItem("token");
+						}}
+					>
+						<Text>Log Out</Text>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={handleUpload}>
+						<Text>Upload new info</Text>
+					</TouchableOpacity>
+				</View>
+			)}
 		</SafeAreaView>
 	);
 }

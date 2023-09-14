@@ -74,7 +74,7 @@ export default function HomeScreen() {
 	return (
 		<SafeAreaView style={styles.container}>
 			{isLoading ? (
-				<ActivityIndicator></ActivityIndicator>
+				<ActivityIndicator />
 			) : (
 				<View style={styles.mainBloc}>
 					<FlatList
@@ -163,7 +163,7 @@ const useStyle = () => {
 			bottom: 10,
 			color: "white",
 			backgroundColor: "black",
-			fontWeight: 800,
+			fontWeight:"bold",
 			padding: 5,
 		},
 		descBloc: {

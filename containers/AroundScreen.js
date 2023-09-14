@@ -18,8 +18,8 @@ export default function AroundScreen() {
 			// Pour notre exemple on va se mettre sur paris
 
 			const latitude = 48.856614;
-
 			const longitude = 2.3522219;
+
 			let { status } = await Location.requestForegroundPermissionsAsync();
 
 			if (status === "granted") {
@@ -40,7 +40,6 @@ export default function AroundScreen() {
 				const response = await axios.get(
 					`https://lereacteur-bootcamp-api.herokuapp.com/api/airbnb/rooms/around?latitude=${latitude}&longitude=${longitude}`
 				);
-
 				setData(response.data);
 			} catch (error) {
 				console.log("error", error);
